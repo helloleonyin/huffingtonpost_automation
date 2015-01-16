@@ -9,6 +9,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class SeleniumClient(object):
+    @classmethod
+    def with_driver(cls):
+        return cls(webdriver.Firefox())
 
     @classmethod
     def user_driver(cls):
@@ -54,14 +57,30 @@ class SeleniumClient(object):
         password_element.send_keys(password)
         self.webdriver.find_element_by_id("signIn").click()
 
-        
+    def switch_to_window(self):
+        self.webdriver.switch_to_window(self.main_window)
+
+    def article_search(self):
+        self.webdriver.find_element_by_class_name("quickread_link").click()
+
+    def share_on_google_plus(self):
+        self.webdriver.find_element_by_class_name("googleplus").find_element_by_tag_name("a").click()
+        self.go_to_not_main_window()
+        self.webdriver.find_element_by_css_selector("div.b-c:nth-child(1)").click()
+
 def load_credentials(filename="credentials.json"):
     import simplejson
     with open(filename, "r") as credentialfile:
         return simplejson.loads(credentialfile.read())
-        
-        
-if __name__ == '__main__':
+
+def main():
     credentials = load_credentials()
-    selenium_client = SeleniumClient.user_driver()
+    selenium_client = SeleniumClient.with_driver()
     selenium_client.login(**credentials)
+    selenium_client.switch_to_window()
+    selenium_client.article_search()
+    selenium_client.share_on_google_plus()
+
+if __name__ == '__main__':
+    main()
+

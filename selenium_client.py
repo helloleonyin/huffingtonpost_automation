@@ -48,11 +48,6 @@ class SeleniumClient(object):
         email.click()
         email.send_keys(username)
         password_element = self.webdriver.find_element_by_id("Passwd")
-        # WebDriverWait(self.webdriver, 4).until(
-        #     EC.element_to_be_selected(
-        #         password
-        #     )
-        # )
         password_element.click()
         password_element.send_keys(password)
         self.webdriver.find_element_by_id("signIn").click()
